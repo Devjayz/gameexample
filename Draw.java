@@ -19,6 +19,8 @@ public int enemyCount;
 	// circle's position
 	public int x = 30;
 	public int y = 30;
+	public int height = 0;
+	public int width = 0;
 
 	// animation states
 	public int state = 0;
@@ -104,7 +106,13 @@ public int enemyCount;
 					}
 				}
 
-
+				for(int x=0; x<monsters.length; x++){
+					if(monsters[x]!=null){
+						if(monsters[x].contact){
+							monsters[x].life = monsters[x].life - 10;
+						}
+					}
+				}
 			}
 		});
 		thread1.start();
@@ -137,6 +145,47 @@ public int enemyCount;
 		reloadImage();
 		repaint();
 	}
+
+	public void checkCollision(){
+		int xChecker = x + width;
+		int yChecker = y;
+
+		for(int x=0; x<monsters.length; x++){
+			boolean collideX = false;
+			boolean collideY = false;
+
+			if(monsters[x]!=null){
+				monsters[x].contact = false;
+
+				if(yChecker > monsters[x].yPos){
+					if(yChecker-monsters[x].yPos < monsters[x].height){
+						collideY = true;
+					}
+				}
+				else{
+					if(monsters[x].yPos - yChecker < monsters[x].height){
+						collideY = true;
+					}
+				}
+
+				if(xChecker > monsters[x].xPos){
+					if(xChecker-monsters[x].xPos < monsters[x].width){
+						collideX = true;
+					}
+				}
+				else{
+					if(monsters[x].xPos - xChecker < 5){
+						collideX = true;
+					}
+				}
+			}
+
+			if(collideX && collideY){
+				System.out.println("collision!");
+				monsters[x].contact = true;
+			}
+		}
+	}
 	
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
@@ -151,6 +200,12 @@ public int enemyCount;
 		g.drawImage(monster5.image, monster5.xPos, monster5.yPos, this);
 		g.drawImage(monster6.image, monster6.xPos, monster6.yPos, this);
 		
+		g.fillRect(monster1.xPos+7, monster1.yPos, monster1.life, 2);
+		g.fillRect(monster2.xPos+8, monster2.yPos, monster2.life, 2);
+		g.fillRect(monster3.xPos+9, monster3.yPos, monster3.life, 2);
+		g.fillRect(monster4.xPos+10, monster4.yPos, monster4.life, 2);
+		g.fillRect(monster5.xPos+6, monster5.yPos, monster5.life, 2);
+		g.fillRect(monster6.xPos+5, monster6.yPos, monster6.life, 2);
 		
 	}
 }
